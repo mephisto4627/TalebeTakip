@@ -130,6 +130,21 @@ function tetikleyicileriKur() {
   Logger.log('Tetikleyici kurulan siniflar: ' + (kurulan.join(', ') || 'yok (hepsi zaten kurulu)'));
 }
 
+// Hocalar ve Islem Gecmisi sayfalari yoksa olusturur (editorden bir kez calistir).
+function eksikSayfalariOlustur_() {
+  var ss = aktifSS_();
+  var eklenen = [];
+  if (!ss.getSheetByName(SHEETS.hocalar)) {
+    ss.insertSheet(SHEETS.hocalar).getRange(1, 1).setValue('Ad Soyad');
+    eklenen.push(SHEETS.hocalar);
+  }
+  if (!ss.getSheetByName(SHEETS.gecmis)) {
+    ss.insertSheet(SHEETS.gecmis).getRange(1, 1, 1, 3).setValues([['Tarih', 'Hoca', 'İşlem']]);
+    eklenen.push(SHEETS.gecmis);
+  }
+  Logger.log('Eklenen sayfalar: ' + (eklenen.join(', ') || 'yok (hepsi zaten vardi)'));
+}
+
 function doPost(e) {
   try {
     const payload = JSON.parse((e && e.postData && e.postData.contents) || '{}');
